@@ -1,5 +1,5 @@
 # LPCBlaster
-My approach on an ISP programming tool for the LPC17xx family.
+My approach for an ISP programming tool for the LPC17xx family.
 
 ## Core Idea
 The ISP of the LPC17xx family is an ASCII based protocol with
@@ -26,6 +26,9 @@ have variable length.
 
 After reception, the controller responds with either ACK (0x06) or NAK (0x15)
 plus a one byte error code.
+
+All integers used in the protocol are encoded little endian and have their width
+encoded in their name (`u8`, `u16`, `u32`).
 
 ### Load Memory
 `L:load_memory(offset:u16, length:u16, data:u8[length], checksum:u16)`
@@ -84,4 +87,14 @@ Resets the controller by using `NVIC_SystemReset()`. This restarts the system.
 This command returns the control to the builtin ISP handler and allows
 using it's commands to do further tasks.
 
+### Error List
+Each command may return `NAK` followed by an error code. These may be one of those:
 
+| Error Code | Description                                                     |
+|-----------'|-----------------------------------------------------------------|
+|     `0x00` | _Unknown state_: The device encountered an invalid state.       |
+|     `0x01` | _Invalid length_: Length was zero.                              |
+|     `0x02` | _Invalid checksum:_ There was a transmission error.             |
+|     `0x03` | _Out Of Range_: `offset`+`length` would read/write out of range.|
+|     `0x04` | _Not Aligned_: A parameter was required to be aligned, but was not.|
+|     `0x05` | _IAP Failure_: There was an error during an IAP operation.      |
