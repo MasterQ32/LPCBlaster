@@ -10,6 +10,7 @@ include(/home/felix/projects/lowlevel/cortex-m3-template/cortex-m3.pri)
 SOURCES += \
   main.cpp \
   modules/data_loader.cpp \
+  modules/erase_and_write.cpp \
   modules/erase_sectors.cpp \
   modules/readback_memory.cpp \
   modules/system_main.cpp \
@@ -24,6 +25,7 @@ DISTFILES += \
 HEADERS += \
   errorcode.hpp \
   modules/data_loader.hpp \
+  modules/erase_and_write.hpp \
   modules/erase_sectors.hpp \
   modules/modules.hpp \
   modules/readback_memory.hpp \

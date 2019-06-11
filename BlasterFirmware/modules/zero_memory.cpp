@@ -44,7 +44,7 @@ namespace
 					return sysctrl::return_to_main(ErrorCode::InvalidLength);
 				}
 		}
-		return sysctrl::return_to_main(ErrorCode::UnkownState);
+		return sysctrl::return_to_main(ErrorCode::UnknownState);
 	}
 }
 

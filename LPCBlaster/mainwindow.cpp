@@ -288,12 +288,24 @@ bool MainWindow::process_port_data()
 
 		case LPCBlasterError:
 		{
-			auto data = port.read(1);
-			if(data.isEmpty())
+			auto data = port.peek(2);
+			if(data.size() < 2)
 				return false;
-			assert(data.size() == 1);
+			data = port.read(2);
+			assert(data.size() == 2);
 
-			logLine(QString("LPCBlaster returned error: %0").arg(int(data[0])));
+			static char const * const error_names[] =
+			{
+			  "Unknown State",
+			  "Invalid Length",
+				"Invalid Checksum",
+				"Out Of Range",
+				"Not Aligned",
+				"IAP Failure",
+				"Unknown Command",
+			};
+
+			logLine(QString("LPCBlaster returned error: %0 (%1)").arg(error_names[data[0]]).arg(uint8_t(data[1])));
 
 			state = LPCBlasterReady;
 			return true;

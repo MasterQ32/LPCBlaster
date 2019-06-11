@@ -30,10 +30,11 @@ sysctrl::state sysctrl::return_to_main(bool suppress_ack)
 	return -1;
 }
 
-sysctrl::state sysctrl::return_to_main(ErrorCode code)
+sysctrl::state sysctrl::return_to_main(ErrorCode code, uint8_t info)
 {
 	Serial::tx('\025');
 	Serial::tx(uint8_t(code));
+	Serial::tx(info);
 	return -1;
 }
 

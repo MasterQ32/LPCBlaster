@@ -5,12 +5,13 @@
 
 enum class ErrorCode : uint8_t
 {
-	UnkownState     = 0x00,
+	UnknownState     = 0x00,
 	InvalidLength   = 0x01,
 	InvalidChecksum = 0x02,
 	OutOfRange      = 0x03,
 	NotAligned      = 0x04,
 	IAPFailure      = 0x05,
+	UnknownCommand  = 0x06,
 };
 
 #endif // ERROR_HPP

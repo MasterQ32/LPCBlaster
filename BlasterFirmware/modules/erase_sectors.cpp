@@ -1,6 +1,8 @@
 #include "erase_sectors.hpp"
+#include "sector_table.hpp"
+#include "system.hpp"
 
-#include <utility>
+#include <iterator>
 #include <hal/iap.hpp>
 
 namespace
@@ -61,11 +63,11 @@ namespace
 
 						auto const prep_err = iap::prepare_sector(sectors[start], sectors[end]);
 						if(prep_err != iap::CMD_SUCCESS)
-							return sysctrl::return_to_main(ErrorCode::IAPFailure);
+							return sysctrl::return_to_main(ErrorCode::IAPFailure, 1);
 
-						auto const erase_err = iap::erase_sectors(sectors[start], sectors[end], 12000);
+						auto const erase_err = iap::erase_sectors(sectors[start], sectors[end], F_CPU / 1000);
 						if(erase_err != iap::CMD_SUCCESS)
-							return sysctrl::return_to_main(ErrorCode::IAPFailure);
+							return sysctrl::return_to_main(ErrorCode::IAPFailure, 2);
 
 						start = end + 1;
 					}
@@ -75,13 +77,26 @@ namespace
 				return ReadSectorList;
 			}
 		}
-		return sysctrl::return_to_main(ErrorCode::UnkownState);
+		return sysctrl::return_to_main(ErrorCode::UnknownState);
 	}
 }
 
-sysctrl::state erase_sectors::begin()
+sysctrl::state erase_sectors::begin_partial()
 {
 	errorState = false;
 	index = 0;
 	return sysctrl::go(&rcv, ReadSectorCount);
+}
+
+sysctrl::state erase_sectors::begin_full()
+{
+	auto const prep_err = iap::prepare_sector(0, std::size(sector_table) - 1);
+	if(prep_err != iap::CMD_SUCCESS)
+		return sysctrl::return_to_main(ErrorCode::IAPFailure);
+
+	auto const erase_err = iap::erase_sectors(0, std::size(sector_table) - 1, F_CPU / 1000);
+	if(erase_err != iap::CMD_SUCCESS)
+		return sysctrl::return_to_main(ErrorCode::IAPFailure);
+
+	return sysctrl::return_to_main();
 }

@@ -18,5 +18,5 @@ namespace sysctrl
 
 	state return_to_main(bool suppress_ack = false);
 
-	state return_to_main(ErrorCode err);
+	state return_to_main(ErrorCode err, uint8_t info = 0);
 }

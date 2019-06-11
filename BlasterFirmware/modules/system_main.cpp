@@ -13,10 +13,11 @@ static sysctrl::state rcv(sysctrl::state, uint8_t c)
 		case 'L': return data_loader::begin();
 		case 'Z': return zero_memory::begin();
 		case 'R': return readback_memory::begin();
-		case 'E': return erase_sectors::begin();
+		case 'E': return erase_sectors::begin_partial();
+		case 'F': return erase_sectors::begin_full();
 		case 'K': NVIC_SystemReset(); break;
 		case 'X': iap::reinvoke_isp(); break;
-		default: Serial::tx('?'); break;
+		default: return sysctrl::return_to_main(ErrorCode::UnknownCommand, c);
 	}
 	return 0;
 }

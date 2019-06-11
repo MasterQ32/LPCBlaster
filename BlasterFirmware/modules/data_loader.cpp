@@ -65,7 +65,7 @@ namespace
 				else
 					return sysctrl::return_to_main();
 		}
-		return sysctrl::return_to_main(ErrorCode::UnkownState);
+		return sysctrl::return_to_main(ErrorCode::UnknownState);
 	}
 }
 
